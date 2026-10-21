@@ -77,7 +77,7 @@ The previous-month baseline performed better on all three listed metrics. The cu
 
 ### Experimental price-increase classification
 
-| Metric | Result |
+| Metric | Result at threshold 0.50 |
 |---|---:|
 | Training records | 3,900 |
 | Test records | 1,250 |
@@ -88,7 +88,70 @@ The previous-month baseline performed better on all three listed metrics. The cu
 | F1 | 0.291 |
 | ROC-AUC | 0.660 |
 
-At the current 0.5 threshold, low precision indicates many false alerts. This experiment is not ready for an operational early-warning system.
+Confusion matrix at threshold 0.50 (rows = actual `[0, 1]`; columns = predicted `[0, 1]`):
+
+```text
+[[698, 392],
+ [ 66,  94]]
+```
+
+### Exploratory threshold sensitivity
+
+A separate validation split used records before January 2019 for fitting the validation model and January 2019–December 2021 for choosing an illustrative threshold. The table below reports the observed validation results. A lower threshold raises recall but generates more false alarms; no threshold is suitable for operational use based on this experiment alone.
+
+| Validation threshold | Balanced accuracy | Precision | Recall | F1 | False alarms | Missed increases | Correct warnings |
+|---:|---:|---:|---:|---:|---:|---:|---:|
+| 0.25 | 0.506 | 0.218 | 0.617 | 0.322 | 428 | 74 | 119 |
+| 0.35 | 0.523 | 0.231 | 0.508 | 0.317 | 327 | 95 | 98 |
+| 0.45 | 0.533 | 0.244 | 0.430 | 0.311 | 257 | 110 | 83 |
+| 0.50 | 0.540 | 0.255 | 0.399 | 0.311 | 225 | 116 | 77 |
+| 0.60 | 0.550 | 0.275 | 0.352 | 0.309 | 179 | 125 | 68 |
+| 0.70 | 0.550 | 0.298 | 0.280 | 0.289 | 127 | 139 | 54 |
+
+Using 0.35 as an illustrative threshold, the subsequent test-period confusion matrix was:
+
+```text
+[[581, 509],
+ [ 47, 113]]
+```
+
+| Metric | Threshold 0.35 on test period |
+|---|---:|
+| Balanced accuracy | 0.620 |
+| Precision | 0.182 |
+| Recall | 0.706 |
+| F1 | 0.289 |
+| ROC-AUC | 0.660 |
+
+Compared with threshold 0.50, threshold 0.35 detected 19 more positive cases but also produced 117 additional false alarms. Only about 18.2% of alerts at threshold 0.35 were correct. The test period had already been inspected at threshold 0.50 earlier in this exploratory workflow, so these results are a sensitivity follow-up, not a fully untouched final evaluation. Future comparisons should use a fresh rolling-origin backtest or a newly held-out period.
+
+This classifier is not ready for an operational early-warning system.
+
+
+### Data coverage and `wheat`-column sensitivity check
+
+The merged data has complete values in the selected monthly close-estimate fields but much lower coverage in several non-prefixed fields:
+
+| Variable | Non-missing | Missing | Coverage |
+|---|---:|---:|---:|
+| `wheat` | 2,273 | 2,902 | 43.92% |
+| `c_wheat` | 5,175 | 0 | 100.00% |
+| `fuel_diesel` | 1,890 | 3,285 | 36.52% |
+| `c_fuel_diesel` | 5,175 | 0 | 100.00% |
+| `exchange_rate_unofficial` | 1,752 | 3,423 | 33.86% |
+| `c_exchange_rate_unofficial` | 5,175 | 0 | 100.00% |
+
+The World Bank data dictionary labels `c_wheat` as **Close estimate — Wheat**. Among the 2,273 records where both `wheat` and `c_wheat` are present, the values match in 2,000 rows and differ in 273. Therefore, the non-missing `wheat` column is not treated here as a guaranteed independent ground-truth source; its meaning and relationship to the close estimate require further source-metadata review. See the [official data dictionary](https://microdata.worldbank.org/catalog/4508/data-dictionary/YEM_2021_RTFP_MKT?file_name=YEM_RTFP_mkt_2009_2026-03-24.csv).
+
+A sensitivity comparison was run for test records from January 2022 through March 2026. Of 1,275 test records, 696 (54.59%) had a non-missing `wheat` value. Forecasts of `c_wheat` were compared with those available `wheat` values on this subset:
+
+| Model | MAE | RMSE | WAPE |
+|---|---:|---:|---:|
+| Previous-month baseline | 27.157 | 48.628 | 4.230% |
+| Random forest | 77.751 | 115.300 | 12.112% |
+| Gradient boosting | 32.481 | 53.627 | 5.060% |
+
+The simple baseline remained strongest in this sensitivity check. This is **not independent external validation**: both columns come from the same World Bank release, and the target (`c_wheat`) differs from the comparison field (`wheat`) in some rows.
 
 ## Limitations and responsible use
 
@@ -114,16 +177,14 @@ Yemen-MarketShield-AI/
 
 ## Next milestones
 
-1. Separate directly observed prices from model-estimated values and document each variable using the official metadata.
-2. Evaluate against appropriate observed records where a fair comparison is possible.
-3. Test multiple pre-specified thresholds, such as 3%, 5%, and 10%, and report precision–recall tradeoffs.
-4. Test generalization to markets excluded from training.
-5. Add reproducibility metadata, error analysis, and a clear model card before expanding the prototype.
+1. Review the ticker and model-information files to understand source-variable definitions and confidence indicators.
+2. Clarify the relationship between `wheat` and `c_wheat` before treating either column as independent ground truth.
+3. Run a pre-specified rolling-origin backtest and a separate evaluation on markets excluded from training.
+4. Compare multiple price-increase definitions (for example 3%, 5%, and 10%) and report precision–recall tradeoffs.
+5. Obtain an independent, well-documented validation source before any operational early-warning use.
 
-## Author and Acknowledgements
+## Author and acknowledgement
 
-Yemen MarketShield AI is an early-stage machine-learning research project developed in the context of the Professional AI Engineering Program (PAEP).
+Developed as an early-stage machine-learning research project in the context of the Professional AI Engineering Program (PAEP).
 
 I would like to express my sincere gratitude to Dr. Khaled Al-Husseini for leading the program and to Eng. Umair Al-Baadani for his instruction and guidance.
-
-This project represents an effort to apply machine-learning concepts to a real-world challenge relevant to Yemen. The current version is a research prototype, and further validation is required before practical deployment.
