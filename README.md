@@ -120,6 +120,10 @@ Yemen-MarketShield-AI/
 4. Test generalization to markets excluded from training.
 5. Add reproducibility metadata, error analysis, and a clear model card before expanding the prototype.
 
-## Author and acknowledgement
+## Author and Acknowledgements
 
-Developed as a machine-learning learning/research project in the context of the Professional AI Engineering Program (PAEP). Acknowledgements may be added here after confirming the preferred names and wording.
+Yemen MarketShield AI is an early-stage machine-learning research project developed in the context of the Professional AI Engineering Program (PAEP).
+
+I would like to express my sincere gratitude to Dr. Khaled Al-Husseini for leading the program and to Eng. Umair Al-Baadani for his instruction and guidance.
+
+This project represents an effort to apply machine-learning concepts to a real-world challenge relevant to Yemen. The current version is a research prototype, and further validation is required before practical deployment.
