@@ -66,3 +66,16 @@ The October 2026 research forecast and the saved `marketshield_price_only_model.
 Logistic Regression is the provisional candidate from the comparative alert-policy evaluation. It did not generate the October forecast included in this experiment.
 
 Risk scores are not calibrated probabilities, and this experiment is not approved for operational economic alerts.
+
+## Alert-policy comparison: important distinction
+
+Two separate alert-policy evaluations are included in this experiment:
+
+1. `rolling_alert_policy_summary.csv` reports a threshold selected from prior rolling predictions. Because score distributions can change across monthly refits, the realized number of alerts differs by model. These results are exploratory and should not be interpreted as a fixed alert-budget comparison.
+
+2. `top30_policy_summary.csv` ranks markets separately for each model and forecast month, selecting approximately the top 30% of markets. This standardizes the number of alerts more directly and is the comparison summarized in the model-selection table.
+
+The policies answer different questions; their alert counts and precision/recall values should not be compared as if they came from the same decision rule. The top-30% policy typically produces slightly more than 30% alerts overall because the number selected in each month is rounded to a whole market.
+
+Neither policy establishes production readiness.
+
