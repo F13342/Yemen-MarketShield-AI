@@ -1,0 +1,4 @@
+source,file_found,column,latest_nonmissing_date,nonmissing_rows
+wfp_food,True,wheat,2026-02-01,2273
+wfp_fx,True,exchange_rate_unofficial,2026-02-01,1752
+wfp_energy,True,fuel_diesel,2026-02-01,1890
