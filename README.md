@@ -75,6 +75,6 @@ The expanded indicators did not improve overall later-period F1. In the later re
 
 ## Public repository
 
-Repository: https://github.com/F13342/Yemen-MarketShield-AI  
-Validation workbench branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench  
+Repository: https://github.com/F13342/Yemen-MarketShield-AI
+Validation workbench branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench
 Pull request #2 (still a draft at the time this bundle was prepared): https://github.com/F13342/Yemen-MarketShield-AI/pull/2
