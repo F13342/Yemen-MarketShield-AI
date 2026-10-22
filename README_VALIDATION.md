@@ -1,6 +1,6 @@
 # Yemen MarketShield AI — Validation Workbench
 
-This folder is a separate research/validation workbench. **It has not been pushed to the public GitHub repository.** It contains the walk-forward notebook, summary outputs, prediction-cache files, and the plan for an independent external evaluation.
+This folder is a separate research/validation workbench. **It is maintained on a separate experimental branch and is not part of `main` unless reviewed and merged.** It contains the walk-forward notebook, summary outputs, prediction-cache files, and the plan for an independent external evaluation.
 
 ## Files
 
@@ -13,7 +13,7 @@ This folder is a separate research/validation workbench. **It has not been pushe
 - `marketshield_improved_backtest_results.csv`: supplementary regression backtest results.
 - `docs/MODEL_VALIDATION_V2.md`: report with latest comparison.
 - `docs/INDEPENDENT_VALIDATION_PLAN.md`: plan for external data matching and truly independent temporal evaluation.
-- `docs/independent_external_audit_moit_weekly_prices.csv`: five weekly observations published by Yemen's Ministry of Industry, Trade and Investment for Aug 20–Sep 17, 2026; this is a discovery/audit aid, not a scored test of the current model.
+- `docs/independent_external_audit_moit_weekly_prices.csv`: five weekly observations published by Yemen's Ministry of Industry, Trade and Investment for Aug 20 to Sep 17, 2026; this is a discovery/audit aid, not a scored test of the current model.
 - `requirements-validation.txt`: LightGBM dependency for full retraining.
 
 ## Running
