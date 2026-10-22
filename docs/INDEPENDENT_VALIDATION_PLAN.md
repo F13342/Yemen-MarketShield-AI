@@ -19,8 +19,6 @@ The current LightGBM experiment can be replayed monthly without allowing trainin
    - HAPI requests require an `app_identifier` generated through its setup workflow: https://hdx-hapi.readthedocs.io/en/latest/getting-started/. Generate/use it privately and do not commit access identifiers into the public repository.
    - Where available, separate actual source observations from aggregated or imputed data using the price flag and document all filtering decisions.
    - **Provenance gate:** verify whether records overlap with the World Bank series or its upstream estimation pipeline. If they overlap, treat WFP as a comparison series rather than fully independent ground truth.
-4. **FAO/GIEWS Yemen country brief**: https://www.fao.org/giews/countrybrief/country.jsp?code=YEM&lang=ar
-   - Reference date 13 October 2026. Useful for context, but not a matched per-market monthly price table by itself.
 
 ## Minimum requirements before scoring a new independent test
 
