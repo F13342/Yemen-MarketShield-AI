@@ -1,6 +1,6 @@
 # Yemen MarketShield AI — Complete Research Submission Package
 
-**Project type:** reproducible research / model-validation package (Jupyter notebooks, source snapshots, generated results and reports).
+**Project type:** research / model-validation package (Jupyter notebooks, derived results, documentation, and reproducibility checks).
 **Status:** research prototype only. This package is not a production service or an operational food-security early-warning system.
 
 ## Project at a glance
@@ -39,8 +39,9 @@ python scripts/validate_submission.py
 
 Open each notebook and choose the same environment as the notebook kernel.
 
-- Run `Yemen_MarketShield_Model_Validation.ipynb` from the first cell to the end. The three dated World Bank ZIP archives and prediction cache CSVs are included beside the notebook. `RETRAIN_MODELS = False` reuses caches only after their keys, labels and source-derived target/baseline values validate. Set it to `True` to refit both models at every forecast origin; this takes longer.
-- Run `Yemen_MarketShield_WFP_External_Validation.ipynb` from the first cell to the end. Locally it discovers `WFP_Wheat_Yemen_HAPI_Response.json` and `YEM_RTFP_mkt_2009_2026-03-24.zip` in this folder. In Colab, upload those two files when prompted. WFP results are written to `results/` and bundled as `Yemen_MarketShield_WFP_Validation_Outputs.zip`.
+- **Public-repository note:** raw source snapshots are intentionally not committed to GitHub. The local academic handoff bundle used to generate this branch included the World Bank ZIPs and the HAPI JSON snapshot, but they are not part of the tracked public repository. The prediction caches and derived result tables are committed.
+- To rerun `Yemen_MarketShield_Model_Validation.ipynb`, obtain the dated World Bank ZIP files from the official catalogue records: food prices https://microdata.worldbank.org/catalog/4508, exchange rates https://microdata.worldbank.org/catalog/6159, and energy prices https://microdata.worldbank.org/catalog/6133. Use the release dated `2026-03-24` and place the three ZIPs beside the notebook. `RETRAIN_MODELS = False` reuses caches only after their keys, labels and source-derived target/baseline values validate. Set it to `True` to refit both models at every forecast origin; this takes longer.
+- To rerun `Yemen_MarketShield_WFP_External_Validation.ipynb`, provide `WFP_Wheat_Yemen_HAPI_Response.json` (a saved HAPI response snapshot for Yemen, wheat commodity code `84`, actual retail prices, YER/kg, through October 2026) and the World Bank food-price ZIP above. The outputs ZIP contains the seven derived result CSVs only; it does **not** contain the raw HAPI input. See the HAPI usage guide: https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/food_security_nutrition_and_poverty/. In Colab, upload the two input files when prompted. Results are written to `results/` and bundled as `Yemen_MarketShield_WFP_Validation_Outputs.zip`.
 
 The notebooks are designed to be run top-to-bottom. If a cache is rejected or an output differs, retain the terminal/notebook message and investigate before committing regenerated artifacts.
 
@@ -67,13 +68,13 @@ The expanded indicators did not improve overall later-period F1. In the later re
 
 ## Reproducibility and data-use notes
 
-- Raw World Bank ZIP archives and the supplied HAPI response are included **in this local academic handoff bundle** so the notebooks can be rerun. Before uploading raw source data to a public GitHub repository, review the source providers' reuse/licensing conditions. The public GitHub link may intentionally carry code, reports and derived artifacts without these raw files.
+- Raw World Bank ZIP archives and the supplied HAPI response were part of the local academic handoff bundle, but raw snapshots are excluded from the public GitHub branch pending source reuse/licence review. Thus a clean clone can run integrity checks on tracked artifacts, but notebook reruns require the source inputs described above.
 - Do not commit a private HDX HAPI `app_identifier` or other credentials. No API credential is needed to run this package because the supplied response snapshot is used.
 - All scores are retrospective. The WFP future period in this package has already been inspected and cannot be treated as an untouched future test for a new round of model tuning.
 - This package does not include a hosted website, live API, database service, alert delivery, calibrated production model or operational monitoring pipeline.
 
 ## Public repository
 
-Repository: https://github.com/F13342/Yemen-MarketShield-AI
-Validation workbench branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench
+Repository: https://github.com/F13342/Yemen-MarketShield-AI  
+Validation workbench branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench  
 Pull request #2 (still a draft at the time this bundle was prepared): https://github.com/F13342/Yemen-MarketShield-AI/pull/2

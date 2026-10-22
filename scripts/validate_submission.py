@@ -14,6 +14,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 errors: list[str] = []
 checks: list[str] = []
+notes: list[str] = []
 
 
 def require(condition: bool, message: str) -> None:
@@ -23,7 +24,9 @@ def require(condition: bool, message: str) -> None:
         errors.append(message)
 
 
-# Source files and expected archive members.
+# Raw source inputs are intentionally excluded from the public repository.
+# Validate them when present (for a local handoff bundle), but do not fail a
+# clean GitHub clone just because source snapshots were not redistributed.
 source_files = [
     "YEM_RTFP_mkt_2009_2026-03-24.zip",
     "YEM_RTFX_mkt_2009_2026-03-24.zip",
@@ -31,7 +34,10 @@ source_files = [
     "WFP_Wheat_Yemen_HAPI_Response.json",
 ]
 for name in source_files:
-    require((ROOT / name).is_file(), f"source input present: {name}")
+    if (ROOT / name).is_file():
+        checks.append(f"optional source input present: {name}")
+    else:
+        notes.append(f"Source input not committed: {name}; obtain it using the README source instructions before re-running notebooks.")
 for prefix in ["YEM_RTFP", "YEM_RTFX", "YEM_RTEP"]:
     path = next(iter(ROOT.glob(prefix + "*.zip")), None)
     if path:
@@ -113,6 +119,8 @@ print(f"Root: {ROOT}")
 print(f"Passed checks: {len(checks)}")
 for item in checks:
     print("  PASS:", item)
+for item in notes:
+    print("  INFO:", item)
 if errors:
     print(f"FAILED checks: {len(errors)}")
     for item in errors:

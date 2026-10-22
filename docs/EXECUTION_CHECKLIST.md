@@ -1,6 +1,6 @@
 # Execution and QA Checklist
 
-Prepared on 22 October 2026 for the local academic handoff bundle.
+Prepared on 22 October 2026 for the local academic handoff bundle and public GitHub workbench.
 
 ## Notebook executions
 
@@ -15,6 +15,10 @@ Prepared on 22 October 2026 for the local academic handoff bundle.
 - [x] WFP/World Bank historical comparison produced 851 matched pairs.
 - [x] WFP temporal test generated 62 regression/classification prediction rows across 11 markets.
 - [x] `scripts/validate_submission.py` passed 37 structural, schema, label and metric-consistency checks.
+
+## Public GitHub clone versus local handoff
+
+The public GitHub branch intentionally omits the raw World Bank ZIP archives and raw WFP HAPI JSON snapshot pending source redistribution review. The local academic handoff bundle used for the recorded notebook executions included those files. On a clean clone, `scripts/validate_submission.py` checks tracked notebooks and derived outputs and prints informational notes for missing raw inputs; notebooks cannot be fully rerun until the source snapshots are obtained as described in `README.md` and `README_AR.md`.
 
 ## What these checks do not establish
 
