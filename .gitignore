@@ -1,26 +1,17 @@
-# Python
-__pycache__/
-*.py[cod]
-*.pyo
-*.egg-info/
+# Python environments and generated runtime files
 .venv/
 venv/
-env/
+__pycache__/
 .ipynb_checkpoints/
-
-# Local data files: do not commit downloaded or merged data by default
-*.csv
-*.zip
-data/
-outputs/
-
-# Local editor / OS files
-.vscode/
-.idea/
-.DS_Store
-Thumbs.db
-
-# Secrets
 .env
-.env.*
-!.env.example
+*.log
+
+# Raw source snapshots: retain locally for reruns, but do not publish until reuse terms are reviewed
+/YEM_RTFP_mkt_2009_2026-03-24.zip
+/YEM_RTFX_mkt_2009_2026-03-24.zip
+/YEM_RTEP_mkt_2009_2026-03-24.zip
+/WFP_Wheat_Yemen_HAPI_Response.json
+
+# Temporary review/updater artifacts
+/final_review_payload/
+/APPLY_FINAL_REVIEW.ps1

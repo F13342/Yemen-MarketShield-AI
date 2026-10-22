@@ -1,0 +1,43 @@
+Decision tree fitted on target months through 2021-12.
+Later replay data were not used to fit this tree; the replay window is retrospective, not independent.
+
+|--- previous_month_change <= 0.32
+|   |--- year_index <= 0.68
+|   |   |--- previous_month_change <= -0.88
+|   |   |   |--- year_index <= -0.48
+|   |   |   |   |--- class: 1
+|   |   |   |--- year_index >  -0.48
+|   |   |   |   |--- class: 0
+|   |   |--- previous_month_change >  -0.88
+|   |   |   |--- year_index <= -0.48
+|   |   |   |   |--- class: 0
+|   |   |   |--- year_index >  -0.48
+|   |   |   |   |--- class: 0
+|   |--- year_index >  0.68
+|   |   |--- month_sin <= -0.97
+|   |   |   |--- class: 1
+|   |   |--- month_sin >  -0.97
+|   |   |   |--- month_cos <= 0.35
+|   |   |   |   |--- class: 0
+|   |   |   |--- month_cos >  0.35
+|   |   |   |   |--- class: 1
+|--- previous_month_change >  0.32
+|   |--- year_index <= 0.68
+|   |   |--- month_sin <= -0.35
+|   |   |   |--- previous_month_change <= 0.66
+|   |   |   |   |--- class: 1
+|   |   |   |--- previous_month_change >  0.66
+|   |   |   |   |--- class: 0
+|   |   |--- month_sin >  -0.35
+|   |   |   |--- previous_month_change <= 1.03
+|   |   |   |   |--- class: 1
+|   |   |   |--- previous_month_change >  1.03
+|   |   |   |   |--- class: 1
+|   |--- year_index >  0.68
+|   |   |--- month_sin <= 0.35
+|   |   |   |--- previous_month_change <= 1.37
+|   |   |   |   |--- class: 1
+|   |   |   |--- previous_month_change >  1.37
+|   |   |   |   |--- class: 1
+|   |   |--- month_sin >  0.35
+|   |   |   |--- class: 1
