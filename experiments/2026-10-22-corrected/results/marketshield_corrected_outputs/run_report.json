@@ -1,0 +1,24 @@
+{
+  "project": "Yemen MarketShield AI",
+  "source_file": "WFP_Wheat_Yemen_HAPI_Response.json",
+  "raw_records": 936,
+  "price_rows_after_scope": 936,
+  "markets": 23,
+  "first_observed_month": "2021-12-01",
+  "last_observed_month": "2026-09-01",
+  "calendar_panel_rows": 997,
+  "labeled_rows": 875,
+  "labeled_positive_cases": 135,
+  "historical_audit_rows": 51,
+  "historical_audit_positive_cases": 4,
+  "historical_audit_threshold": 0.5894531844033797,
+  "october_forecast_input_rows": 11,
+  "october_threshold": 0.6935809182577137,
+  "october_experimental_alerts": 0,
+  "operational_ready": false,
+  "notes": [
+    "Historical April-August 2026 results were previously inspected; not an untouched final test.",
+    "October scores are experimental and not calibrated probabilities.",
+    "No economic features were used in the October model due stale observed covariate coverage."
+  ]
+}
