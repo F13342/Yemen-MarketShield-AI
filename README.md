@@ -1,80 +1,90 @@
-# Yemen MarketShield AI — Complete Research Submission Package
+# Yemen MarketShield AI
 
-**Project type:** research / model-validation package (Jupyter notebooks, derived results, documentation, and reproducibility checks).
-**Status:** research prototype only. This package is not a production service or an operational food-security early-warning system.
+## Wheat-price monitoring and risk analytics for Yemen
 
-## Project at a glance
+**Product status:** research and decision-support prototype. The current release provides reproducible data analysis, retrospective risk scoring, forecast evaluation and audit-oriented reports. It is not a live alerting service and has not been validated for operational humanitarian, procurement, financial or public-warning decisions.
 
-Yemen MarketShield AI studies whether monthly wheat-price changes in Yemen can be described or flagged using historical market data. The package contains two related but distinct evaluations:
+## Product overview
 
-1. **World Bank retrospective walk-forward replay** — LightGBM classifiers predict whether the next consecutive month’s World Bank `c_wheat` close estimate is more than 5% above the current month. The notebook compares core price/seasonality features with expanded data-quality features and includes a threshold trade-off table.
-2. **WFP HAPI actual-price temporal experiment** — a separate experiment based on actual monthly retail wheat observations returned by HDX HAPI. It compares simple baselines and regression models, and evaluates an exploratory >5% rise classifier on April–September 2026.
+Yemen MarketShield AI explores whether historical market prices and time-aware signals can help identify months in which recorded wheat-price estimates may rise sharply. It combines data-quality checks, chronological model evaluation, baseline comparisons, threshold sensitivity, market-level summaries and anomaly exploration in a single version-controlled workbench.
 
-These experiments should not be conflated: the WFP experiment is a separate target-series experiment, and the matching of WFP and World Bank history is approximate. Potential upstream data overlap means it is **not claimed as fully independent-source validation**.
+The primary outcome is defined as a greater-than-5% increase in the World Bank `c_wheat` monthly close estimate at the next consecutive month. This is a project-specific statistical target; it is not an official food-insecurity, food-crisis or humanitarian-needs indicator.
 
-## Main files
+## Core components
 
-- `Yemen_MarketShield_Model_Validation.ipynb` — primary World Bank temporal validation notebook.
-- `Yemen_MarketShield_WFP_External_Validation.ipynb` — WFP HAPI experiment; adapted for both local VS Code/Jupyter and Google Colab.
-- `docs/PROJECT_SUMMARY.md` — concise methods, result tables and limitations.
-- `docs/MODEL_VALIDATION_V2.md` — detailed World Bank experiment report.
-- `docs/MODEL_VALIDATION_REPORT_WFP.md` — detailed WFP temporal experiment report.
-- `docs/INDEPENDENT_VALIDATION_PLAN.md` — next steps for truly independent evaluation.
-- `marketshield_prequential_core_predictions.csv`, `marketshield_prequential_enhanced_predictions.csv` — cached per-origin probabilities.
-- `marketshield_prequential_predictions.csv`, `marketshield_prequential_summary.csv`, `marketshield_threshold_tradeoff.csv` — combined predictions and regenerated metrics.
-- `marketshield_improved_backtest_results.csv` — supplementary selected-year regression benchmark.
-- `results/` — generated WFP matched-pair, validation/test predictions and metric tables.
-- `scripts/validate_submission.py` — lightweight integrity checks for notebooks and output files.
+| Component | Purpose |
+|---|---|
+| `Yemen_MarketShield_Initial_Analysis.ipynb` | Data exploration, source consistency checks and initial forecasting baselines |
+| `Yemen_MarketShield_Model_Validation.ipynb` | Monthly walk-forward replay, cache validation, threshold selection and LightGBM evaluation |
+| `Yemen_MarketShield_WFP_External_Validation.ipynb` | Separate analysis of actual retail wheat prices returned through HDX HAPI |
+| `scripts/analyze_marketshield.py` | Generates product analytics, temporal model comparisons, PCA diagnostics and anomaly summaries without target-derived features |
+| `scripts/validate_submission.py` | Checks notebook integrity, output schemas, key uniqueness and metric consistency |
+| `docs/PROJECT_SUMMARY.md` | Methods, metrics and interpretation in one place |
+| `docs/PROJECT_REPORT.md` | Description of the initial experiments and their limitations |
+| `docs/MODEL_VALIDATION_V2.md` | Detailed temporal evaluation of the World Bank experiment |
+| `docs/MODEL_VALIDATION_REPORT_WFP.md` | Results of the separate WFP/HAPI experiment |
+| `docs/DATA_SOURCES.md` | Data provenance, joins, units and interpretation notes |
+| `docs/INDEPENDENT_VALIDATION_PLAN.md` | Protocol for obtaining and evaluating an independent test source |
+| `results/product_analysis/` | Generated analytical figures and machine-readable outputs |
+| `results/` | WFP experiment result tables and predictions |
 
-## Quick start on Windows / VS Code
+## Method and current evidence
 
-Open this folder in VS Code. Create/select a Python environment (Python 3.10 or later is recommended), then in the integrated terminal run:
+### World Bank monthly replay
+
+The current prediction artifact contains 2,088 market-origin rows across 24 local markets: 864 rows in the 2019–2021 validation window and 1,224 rows in the later replay window beginning in 2022. Thresholds were selected on the validation window and kept fixed for the later replay.
+
+| Model / split | Threshold | ROC-AUC | Precision | Recall | F1 | Alerts | False alerts |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| LightGBM core — validation | 0.475 | 0.749 | 0.435 | 0.670 | 0.528 | 285 | 161 |
+| LightGBM core — later replay | 0.475 | 0.684 | 0.224 | 0.555 | 0.319 | 384 | 298 |
+| Expanded quality — validation | 0.500 | 0.747 | 0.459 | 0.611 | 0.524 | 246 | 133 |
+| Expanded quality — later replay | 0.500 | 0.680 | 0.223 | 0.510 | 0.310 | 355 | 276 |
+
+The later replay shows a high false-alert burden, around 77.6% for the core model and 77.7% for the expanded model. Additional quality indicators did not improve later-replay F1 in the current run.
+
+### WFP/HDX HAPI experiment
+
+The separate HAPI analysis contains 62 later-period rows across 11 markets for April–September 2026. The previous-period regression baseline achieved MAE of about 20 YER/kg and WAPE of about 2.41%. The exploratory greater-than-5% rise classifier produced 55 alerts, including 50 false positives, and F1 of about 0.164. These results do not support operational alerting.
+
+## Reproducibility
+
+### Environment setup (Windows / VS Code)
 
 ```powershell
 python -m venv .venv
 .\.venv\Scripts\Activate.ps1
 python -m pip install -r requirements.txt
-python scripts/validate_submission.py
+python -m pip install -r requirements-validation.txt
+python .\scripts\validate_submission.py
+python .\scripts\analyze_marketshield.py
 ```
 
-Open each notebook and choose the same environment as the notebook kernel.
+Open notebooks in VS Code or Jupyter and select the same Python environment. Run notebook cells from top to bottom.
 
-- **Public-repository note:** raw source snapshots are intentionally not committed to GitHub. The local academic handoff bundle used to generate this branch included the World Bank ZIPs and the HAPI JSON snapshot, but they are not part of the tracked public repository. The prediction caches and derived result tables are committed.
-- To rerun `Yemen_MarketShield_Model_Validation.ipynb`, obtain the dated World Bank ZIP files from the official catalogue records: food prices https://microdata.worldbank.org/catalog/4508, exchange rates https://microdata.worldbank.org/catalog/6159, and energy prices https://microdata.worldbank.org/catalog/6133. Use the release dated `2026-03-24` and place the three ZIPs beside the notebook. `RETRAIN_MODELS = False` reuses caches only after their keys, labels and source-derived target/baseline values validate. Set it to `True` to refit both models at every forecast origin; this takes longer.
-- To rerun `Yemen_MarketShield_WFP_External_Validation.ipynb`, provide `WFP_Wheat_Yemen_HAPI_Response.json` (a saved HAPI response snapshot for Yemen, wheat commodity code `84`, actual retail prices, YER/kg, through October 2026) and the World Bank food-price ZIP above. The outputs ZIP contains the seven derived result CSVs only; it does **not** contain the raw HAPI input. See the HAPI usage guide: https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/food_security_nutrition_and_poverty/. In Colab, upload the two input files when prompted. Results are written to `results/` and bundled as `Yemen_MarketShield_WFP_Validation_Outputs.zip`.
+### Source inputs
 
-The notebooks are designed to be run top-to-bottom. If a cache is rejected or an output differs, retain the terminal/notebook message and investigate before committing regenerated artifacts.
+Raw source snapshots are intentionally excluded from the public repository until redistribution terms are confirmed. To rerun the main notebooks, obtain the World Bank release dated `2026-03-24` from the source catalogues and place the three ZIP archives next to the notebooks:
 
-## Main World Bank result snapshot
+- Food prices: https://microdata.worldbank.org/catalog/4508
+- Exchange rates: https://microdata.worldbank.org/catalog/6159
+- Energy prices: https://microdata.worldbank.org/catalog/6133
 
-The included run produced 2,088 aligned predictions (24 local markets × 87 forecast origins), with 864 validation examples and 1,224 later-period replay examples. The later period was already inspected during earlier development and is therefore **not an untouched holdout**.
+The WFP/HAPI notebook additionally needs a saved response snapshot for Yemen wheat retail prices in YER/kg. Use the HDX HAPI usage guide: https://hdx-hapi.readthedocs.io/en/latest/data_usage_guides/food_security_nutrition_and_poverty/. Do not add API credentials, app identifiers or other secrets to the repository. The committed `results/` files are derived outputs; the result archive does not contain the raw HAPI input.
 
-| Model / split | Threshold | Precision | Recall | F1 | Alerts | False alerts |
-|---|---:|---:|---:|---:|---:|---:|
-| Core — validation | 0.475 | 0.435 | 0.670 | 0.528 | 285 | 161 |
-| Core — later replay | 0.475 | 0.224 | 0.555 | 0.319 | 384 | 298 |
-| Expanded quality — validation | 0.500 | 0.459 | 0.611 | 0.524 | 246 | 133 |
-| Expanded quality — later replay | 0.500 | 0.223 | 0.510 | 0.310 | 355 | 276 |
+The supplementary analysis script uses only predictors known at the forecast origin (`previous_month_change`, calendar features and market ID). It excludes `next_pct_change` and `shock_gt5` from the model feature matrix. Learning-history and regularization settings are assessed on a chronological internal validation window; the later replay is not used to choose hyperparameters.
 
-The expanded indicators did not improve overall later-period F1. In the later replay, about 77.6% of core alerts and 77.7% of expanded-quality alerts were false positives. This is not adequate evidence for operational warning use.
+## Limitations and intended use
 
-## WFP temporal experiment snapshot
+1. The later World Bank replay was examined during earlier development and is not an untouched independent holdout.
+2. The World Bank series contains monthly close estimates and can be revised; a frozen historical file does not prove that each value was available in exactly that form at every historical forecast origin.
+3. Historical agreement between World Bank and HAPI data is descriptive. The sources may share upstream provenance, and their measurement periods or product definitions may differ.
+4. The HAPI later-period window has already been examined and must not be treated as an untouched final test for further model selection.
+5. The high false-alert rate indicates that the current models are not suitable for operational alerts without further independent testing, calibration, user-centered cost analysis and silent evaluation.
+6. The current repository is a research/decision-support prototype. It does not include a hosted dashboard, live API, alert-delivery service or production monitoring pipeline.
 
-- HAPI response: 936 source records, 23 markets; the filtered series covers actual retail wheat prices in YER/kg.
-- Historical source comparison: 851 matched market-period pairs (January 2022–March 2026); the month alignment is approximate and may share upstream provenance.
-- Future test: 62 market-period rows across 11 markets, April–September 2026.
-- The previous-period baseline obtained test MAE 20.00 YER/kg and WAPE 2.41%; Gradient Boosting had lower RMSE but worse MAE/WAPE.
-- The exploratory warning classifier had 6 positive events in the test set, precision 9.1%, recall 83.3%, F1 0.164 and ROC-AUC 0.479, with 50 false positives. These estimates are highly uncertain and do not support deployment.
+## Project links
 
-## Reproducibility and data-use notes
-
-- Raw World Bank ZIP archives and the supplied HAPI response were part of the local academic handoff bundle, but raw snapshots are excluded from the public GitHub branch pending source reuse/licence review. Thus a clean clone can run integrity checks on tracked artifacts, but notebook reruns require the source inputs described above.
-- Do not commit a private HDX HAPI `app_identifier` or other credentials. No API credential is needed to run this package because the supplied response snapshot is used.
-- All scores are retrospective. The WFP future period in this package has already been inspected and cannot be treated as an untouched future test for a new round of model tuning.
-- This package does not include a hosted website, live API, database service, alert delivery, calibrated production model or operational monitoring pipeline.
-
-## Public repository
-
-Repository: https://github.com/F13342/Yemen-MarketShield-AI
-Validation workbench branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench
-Pull request #2 (still a draft at the time this bundle was prepared): https://github.com/F13342/Yemen-MarketShield-AI/pull/2
+- Repository: https://github.com/F13342/Yemen-MarketShield-AI
+- Validation branch: https://github.com/F13342/Yemen-MarketShield-AI/tree/experiment/validation-workbench
+- Review request: https://github.com/F13342/Yemen-MarketShield-AI/pull/2

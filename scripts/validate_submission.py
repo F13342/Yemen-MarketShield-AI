@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lightweight integrity checks for the Yemen MarketShield research submission."""
+"""Integrity checks for the Yemen MarketShield AI product-prototype bundle."""
 from __future__ import annotations
 
 import json
@@ -114,7 +114,47 @@ try:
 except Exception as exc:
     errors.append(f"WFP result validation failed: {exc}")
 
-print("Yemen MarketShield AI — submission integrity check")
+
+# Product analytics code and regenerated artifacts.
+try:
+    analysis_script = ROOT / "scripts" / "analyze_marketshield.py"
+    require(analysis_script.is_file(), "product analytics script exists")
+    compile(analysis_script.read_text(encoding="utf-8"), str(analysis_script), "exec")
+    checks.append("product analytics script has valid Python syntax")
+
+    product_out = ROOT / "results" / "product_analysis"
+    expected_outputs = [
+        "classification_performance_curves.png",
+        "validation_threshold_sensitivity.png",
+        "retrospective_model_comparison.png",
+        "retrospective_model_comparison.csv",
+        "primary_model_metrics.csv",
+        "expanding_history_sensitivity.csv",
+        "regularization_sensitivity.csv",
+        "feature_importance.csv",
+        "decision_tree_rules.txt",
+        "pca_projection.png",
+        "pca_loadings.csv",
+        "replay_anomaly_scores.csv",
+        "anomaly_summary_by_market.csv",
+        "historical_forecast_error.png",
+        "analysis_run_summary.json",
+        "OUTPUT_INDEX.csv",
+    ]
+    for item in expected_outputs:
+        require((product_out / item).is_file(), f"product analytics output exists: {item}")
+    run_info = json.loads((product_out / "analysis_run_summary.json").read_text(encoding="utf-8"))
+    feature_cols = set(run_info.get("model_feature_columns", []))
+    forbidden = {"shock_gt5", "next_pct_change", "next_date", "abs_change"}
+    require(not feature_cols.intersection(forbidden), "future outcome columns excluded from model features")
+    require(run_info.get("threshold_tuning_uses_later_replay") is False, "later replay is not used for threshold tuning")
+    require(run_info.get("later_replay_is_untouched_independent_holdout") is False, "retrospective replay is explicitly not described as untouched holdout")
+    comparison = pd.read_csv(product_out / "retrospective_model_comparison.csv")
+    require(not comparison.empty and {"model", "split", "f1", "precision", "recall"}.issubset(comparison.columns), "retrospective comparison has model metrics")
+except Exception as exc:
+    errors.append(f"product analytics validation failed: {exc}")
+
+print("Yemen MarketShield AI — product integrity check")
 print(f"Root: {ROOT}")
 print(f"Passed checks: {len(checks)}")
 for item in checks:
@@ -127,4 +167,4 @@ if errors:
         print("  FAIL:", item)
     sys.exit(1)
 print("RESULT: PASS — artifact integrity checks succeeded.")
-print("Note: this is not evidence of operational or independent scientific validation.")
+print("Note: integrity checks do not establish operational readiness or independent scientific validation.")

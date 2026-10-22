@@ -1,0 +1,27 @@
+{
+  "product": "Yemen MarketShield AI",
+  "analysis_script": "scripts/analyze_marketshield.py",
+  "input_rows": 2088,
+  "markets": 24,
+  "validation_rows": 864,
+  "later_replay_rows": 1224,
+  "validation_period_end": "2021-12-31",
+  "later_replay_period_start": "2022-01-01",
+  "model_feature_columns": [
+    "previous_month_change",
+    "month_sin",
+    "month_cos",
+    "year_index",
+    "mkt_name"
+  ],
+  "excluded_outcome_columns_from_features": [
+    "shock_gt5",
+    "next_pct_change",
+    "next_date"
+  ],
+  "threshold_tuning_uses_later_replay": false,
+  "later_replay_is_untouched_independent_holdout": false,
+  "pca_fit_window": "target months through 2021-12",
+  "anomaly_model_fit_window": "target months through 2021-12",
+  "interpretation": "Research/decision-support prototype; not validated for operational warning use."
+}

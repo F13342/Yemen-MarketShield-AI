@@ -1,12 +1,17 @@
+# Python environments and generated runtime files
 .venv/
 venv/
 __pycache__/
 .ipynb_checkpoints/
 .env
 *.log
-# Keep raw source snapshots local until redistribution terms are verified
-/YEM_RTEP_mkt_2009_2026-03-24.zip
+
+# Raw source snapshots: retain locally for reruns, but do not publish until reuse terms are reviewed
 /YEM_RTFP_mkt_2009_2026-03-24.zip
 /YEM_RTFX_mkt_2009_2026-03-24.zip
+/YEM_RTEP_mkt_2009_2026-03-24.zip
 /WFP_Wheat_Yemen_HAPI_Response.json
-/MANIFEST.sha256
+
+# Temporary review/updater artifacts
+/final_review_payload/
+/APPLY_FINAL_REVIEW.ps1
