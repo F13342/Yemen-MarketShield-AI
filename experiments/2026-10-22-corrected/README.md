@@ -58,3 +58,11 @@ The experimental forecast uses September 2026 observed prices for markets with a
 ## Reproducibility
 
 Run the notebook in a compatible Python environment and verify that the required source files and dependencies are available. Review the notebook code and source-data provenance before treating the outputs as independently reproducible.
+
+## Model-to-artifact clarification
+
+The October 2026 research forecast and the saved `marketshield_price_only_model.joblib` artifact were generated using the price-only LightGBM pipeline.
+
+Logistic Regression is the provisional candidate from the comparative alert-policy evaluation. It did not generate the October forecast included in this experiment.
+
+Risk scores are not calibrated probabilities, and this experiment is not approved for operational economic alerts.
